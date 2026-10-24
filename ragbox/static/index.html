@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ragbox</title>
+  <meta name="description" content="Chat with your documents, 100% locally.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar" aria-label="Chats and documents">
+      <div class="sidebar-top">
+        <a class="brand" href="/" aria-label="ragbox home">
+          <img src="favicon.svg" alt="" width="26" height="26"><span>ragbox</span>
+        </a>
+        <button class="icon-btn only-mobile" id="close-sidebar" aria-label="Close sidebar">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <button class="new-chat" id="new-chat">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New chat
+      </button>
+
+      <nav class="section" aria-label="Chats">
+        <h2>Chats</h2>
+        <ul class="list" id="chat-list"></ul>
+      </nav>
+
+      <section class="section docs" aria-label="Documents">
+        <div class="section-head">
+          <h2>Documents</h2>
+          <button class="link-btn" id="add-docs">Add</button>
+        </div>
+        <ul class="list" id="doc-list"></ul>
+        <p class="hint" id="doc-hint">Drop files anywhere to add them.</p>
+      </section>
+
+      <div class="sidebar-foot">
+        <span class="status" id="model-status"><i></i><b>Starting…</b></span>
+        <button class="icon-btn" id="theme" aria-label="Switch light/dark theme" title="Theme">
+          <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn only-mobile" id="open-sidebar" aria-label="Open sidebar">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <h1 id="chat-title">New chat</h1>
+      </header>
+
+      <div class="banner" id="banner" hidden>
+        <div class="banner-text" id="banner-text"></div>
+        <div class="bar"><span id="banner-bar"></span></div>
+        <button class="link-btn" id="banner-retry" hidden>Retry</button>
+      </div>
+
+      <section class="thread" id="thread" aria-live="polite">
+        <div class="welcome" id="welcome">
+          <img src="favicon.svg" alt="" width="44" height="44">
+          <h2>What would you like to know?</h2>
+          <p>Drop PDFs, Word, text or Markdown files, then ask anything about them.<br>Everything runs on this computer.</p>
+          <button class="drop-card" id="drop-card">
+            <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+            <span><b>Add documents</b> or drag them here</span>
+          </button>
+        </div>
+        <div class="messages" id="messages"></div>
+      </section>
+
+      <form class="composer" id="composer" autocomplete="off">
+        <div class="box">
+          <textarea id="input" rows="1" placeholder="Ask about your documents…" aria-label="Message" maxlength="8000"></textarea>
+          <div class="actions">
+            <button type="button" class="icon-btn" id="attach" aria-label="Add documents" title="Add documents">
+              <svg viewBox="0 0 24 24"><path d="M21 11.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l8.6-8.6a3.7 3.7 0 0 1 5.2 5.2l-8.6 8.6a1.8 1.8 0 0 1-2.6-2.6l7.9-7.9"/></svg>
+            </button>
+            <button type="submit" class="send" id="send" aria-label="Send" disabled>
+              <svg class="i-send" viewBox="0 0 24 24"><path d="M12 19V5m0 0l-6 6m6-6l6 6"/></svg>
+              <svg class="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="disclaimer">Answers come from your documents and a local AI model, and can be wrong. Check the sources.</p>
+      </form>
+    </main>
+  </div>
+
+  <div class="dropzone" id="dropzone" hidden><div>Drop files to add them</div></div>
+  <input type="file" id="file-input" multiple hidden accept=".pdf,.docx,.txt,.md,.markdown">
+  <div class="toasts" id="toasts" role="status"></div>
+</body>
+</html>
