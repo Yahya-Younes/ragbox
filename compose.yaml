@@ -1,0 +1,49 @@
+# ragbox — one command:  docker compose up -d   then open http://localhost:8080
+name: ragbox
+
+services:
+  ollama:
+    image: ollama/ollama:0.40.11
+    restart: unless-stopped
+    volumes:
+      - ollama-models:/root/.ollama          # downloaded models survive restarts
+    environment:
+      OLLAMA_KEEP_ALIVE: 30m
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    # Not published on the host: only the ragbox app can talk to it.
+
+  app:
+    build: .
+    image: ragbox:local
+    restart: unless-stopped
+    depends_on:
+      ollama:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${RAGBOX_PORT:-8080}:8080"  # reachable from this computer only
+    environment:
+      RAGBOX_OLLAMA_URL: ${RAGBOX_OLLAMA_URL:-http://ollama:11434}
+      RAGBOX_CHAT_MODEL: ${RAGBOX_CHAT_MODEL:-gemma3:4b}
+      RAGBOX_EMBED_MODEL: ${RAGBOX_EMBED_MODEL:-nomic-embed-text}
+      RAGBOX_MAX_UPLOAD_MB: ${RAGBOX_MAX_UPLOAD_MB:-50}
+      RAGBOX_ALLOWED_HOSTS: ${RAGBOX_ALLOWED_HOSTS:-localhost,127.0.0.1,[::1]}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # lets RAGBOX_OLLAMA_URL point to an Ollama on your computer
+    volumes:
+      - ragbox-data:/data                   # your documents, index and chats
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 2g
+    pids_limit: 256
+
+volumes:
+  ollama-models:
+  ragbox-data:

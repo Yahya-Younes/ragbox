@@ -1,0 +1,12 @@
+# End-to-end test: replaces the real Ollama with a tiny fake server (no model download).
+#   docker compose -f compose.yaml -f tests/e2e/compose.e2e.yaml up -d --build
+services:
+  ollama:
+    image: python:3.12-slim
+    command: ["python", "/fake/fake_ollama.py"]
+    volumes:
+      - ./tests/e2e:/fake:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:11434/api/tags')"]
+      interval: 2s
+      retries: 15

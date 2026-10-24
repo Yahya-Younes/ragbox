@@ -1,0 +1,11 @@
+# NVIDIA GPU acceleration (Linux / Windows WSL2 with the NVIDIA Container Toolkit):
+#   docker compose -f compose.yaml -f compose.gpu.yaml up -d
+services:
+  ollama:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
