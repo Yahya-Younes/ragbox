@@ -19,3 +19,4 @@ ignore = ["S101", "S608"]  # asserts in tests; SQL built only from placeholders
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
